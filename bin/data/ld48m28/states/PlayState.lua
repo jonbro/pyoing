@@ -57,22 +57,25 @@ function PlayState:touchDown(x, y, id)
 	finger = Vec2(x, y)
 	start = 0;
 	local baseToAdd;
+	local baseFloat;
 	if y > bludG.screen_rect.h/2 then
 		start = Vec2(bludG.screen_rect.w/2, bludG.screen_rect.h)
 		if self.r_main.health <= 0 then return true end
 		self.r_main:shoot()
 		baseToAdd = self.b_main
+		baseFloat = 1;
 	else
 		start = Vec2(bludG.screen_rect.w/2, 5)
 		if self.b_main.health <= 0 then return true end
 		self.b_main:shoot()
 		baseToAdd = self.r_main
+		baseFloat = 2;
 	end
 	finger:sub(start)
 	finger:normalize()
 	pd:startList("fromOF")
 	pd:addSymbol("sync")
-	pd:addFloat(1)
+	pd:addFloat(baseFloat)
 	pd:finish();
 	local b = self:add(Bullet(bludG.screen_rect.w/2, start.y, finger, baseToAdd))
 

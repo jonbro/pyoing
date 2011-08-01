@@ -37,6 +37,11 @@ function Bullet:update()
 		self.b2dc:destroy()
 		self.b2dc = nil
 		self.dead = true
+		pd:startList("fromOF")
+		pd:addSymbol("bulletReturn")
+		pd:addFloat(1)
+		pd:finish();
+
 		Tweener:addTween(self.pos, {x=self.baseToAdd.pos.x, y=self.baseToAdd.pos.y}, {func="easeInOutSine", time=.25, onComplete=function()
 			self.baseToAdd.health = self.baseToAdd.health + 1
 			self:kill()		
