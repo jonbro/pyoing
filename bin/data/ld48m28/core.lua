@@ -46,60 +46,7 @@ function math.randomRange(min, max)
   return min + (math.random() * (max - min))
 end
 
-LineBatch = class(function(o)
-  o:clear()
-  o.r = 0
-  o.g = 0
-  o.b = 0
-end)
-function LineBatch:setColor(r, g, b)
-  self.r = r
-  self.g = g
-  self.b = b
-end
-function LineBatch:clear()
-  self.batch = {}
-end
-function LineBatch:addLine(x1, y1, x2, y2)
-  table.insert(self.batch, {x1=x1, y1=y1, x2=x2, y2=y2})
-end
-function LineBatch:draw()
-  for i, v in pairs(self.batch) do
-    line:drawLine(v.x1, v.y1, v.x2, v.y2)
-  end
-end
-lb = LineBatch();
 
-TextBatch = class(LineBatch, function(o)
-  LineBatch.init(o)
-  o.smallBatch = {}
-end)
-function TextBatch:clear()
-  LineBatch.clear(self)
-  self.smallBatch = {}
-end
-function TextBatch:addText(output, x, y, ...)
-  local arg = {...}
-  small = arg[1]
-  width = arg[2]
-  line_height = arg[3]
-  if small then
-    table.insert(self.smallBatch, {output=output, x=x, y=y, r=self.r, g=self.g, b=self.b, w=width, line_height=line_height})
-  else
-    table.insert(self.batch, {output=output, x=x, y=y, r=self.r, g=self.g, b=self.b, w=width, line_height=line_height})
-  end
-end
-function TextBatch:draw()
-  for i, v in pairs(self.batch) do
-    bg:setColor(v.r, v.g, v.b)
-    font:draw(v.output, v.x, v.y, v.w, v.line_height)
-  end
-  for i, v in pairs(self.smallBatch) do
-    bg:setColor(v.r, v.g, v.b)
-    sfont:draw(v.output, v.x,v.y, v.w, v.line_height)
-  end
-end
-tb = TextBatch();
 
 PI = 3.14159265
 
@@ -111,23 +58,11 @@ bludG = bludGlobal()
 bb = bludShapeBatch(2000, 2);
 bbt = bludShapeBatch(2000, 2);
 
-circle = bludImage();
-circle:load(blud.bundle_root .. "/namcap/assets/circle.png")
-line = bludLine(circle, 1);
 
 particles = ParticleSystems();
 
 --oscRec = Receiver();
 
-font = bludFont();
-sfont = bludFont();
-if retina then
-  font:load(blud.bundle_root .. "/arial_rounded.ttf", 52, true)
-  sfont:load(blud.bundle_root .. "/arial_rounded.ttf", 32, true)
-else
-  font:load(blud.bundle_root .. "/arial_rounded.ttf", 26, true)
-  sfont:load(blud.bundle_root .. "/arial_rounded.ttf", 16, true)
-end
 
 function gridQuantize(x, y)
   x = math.floor(x/hgridSize)*hgridSize
@@ -149,16 +84,12 @@ function blud.draw()
   sheet:draw();
   bbt:draw();
   bg:setColor(0,0,0,255);
-  lb:draw();
-  tb:draw();
 end
 function blud.update(t)
   box2d:update();
   Tweener:update();
   bb:clear();
   bbt:clear();
-  lb:clear();
-  tb:clear();
   sheet:clear();
 
   bb:setColor(255,241,199)
