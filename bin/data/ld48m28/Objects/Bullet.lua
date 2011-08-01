@@ -5,7 +5,11 @@ Bullet = class(Object, function(o, x, y, dir, baseToAdd)
 	o.radius = 5
 	if retina then o.radius = 10 end
 	o.b2dc = bludBox2dCircle(box2d, 2, 0.53, 0.1, o.pos.x, o.pos.y, o.radius)
-	o.b2dc:addForce(dir.x, dir.y, o.radius*8)
+	if retina then
+		o.b2dc:addForce(dir.x, dir.y, o.radius*40)
+	else
+		o.b2dc:addForce(dir.x, dir.y, o.radius*8)
+	end
 	o.age = 0
 	o.updated = false
 	o.baseToAdd = baseToAdd
